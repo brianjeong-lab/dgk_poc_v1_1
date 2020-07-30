@@ -27,3 +27,13 @@ explore: keyword_id {}
 explore: keyword_list {}
 
 explore: sentence {}
+
+explore: sentence_poc {}
+
+explore: big4_bank_hana {}
+
+explore: big4_bank_kb {}
+
+explore: big4_bank_sh {}
+
+explore: big4_bank_wo {}

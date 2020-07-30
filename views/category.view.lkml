@@ -27,6 +27,11 @@ view: category {
     sql: ${TABLE}.KEYWORD ;;
   }
 
+  dimension: mydate {
+    type: date
+    sql: TIMESTAMP(PARSE_DATE('%Y%m%d', FORMAT('%08d',${TABLE}.WRITE_DAY)));;
+  }
+
   dimension: sum_score {
     type: number
     sql: ${TABLE}.SUM_SCORE ;;

@@ -27,6 +27,11 @@ view: bank_category_daily {
     sql: ${TABLE}.TYPE ;;
   }
 
+  dimension: mydate {
+    type: date
+    sql: TIMESTAMP(PARSE_DATE('%Y%m%d', FORMAT('%08d',${TABLE}.WRITE_DAY)));;
+  }
+
   dimension: write_day {
     type: number
     sql: ${TABLE}.WRITE_DAY ;;
