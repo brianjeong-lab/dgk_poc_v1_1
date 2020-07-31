@@ -27,3 +27,5 @@ explore: keyword_id {}
 explore: keyword_list {}
 
 explore: sentence {}
+
+explore: keyword_relation_lv1 {}
