@@ -1,6 +1,6 @@
 view: keyword_relation_lv1 {
   derived_table: {
-    sql: SELECT  {% parameter prm_keyword %}   AS LV1
+    sql: SELECT  {% parameter prmkeyword %}   AS LV1
             ,   TB.keyword AS LV2
             ,   TB.keyword
             ,   SUM(TB.score)     AS scr
@@ -10,31 +10,31 @@ view: keyword_relation_lv1 {
         WHERE   TA.ID IN (
                     SELECT  A.ID
                     FROM    `kb-daas-dev.master_200723.keyword_bank_result` A
-                    WHERE   DATE(A.CRAWLSTAMP) >= {% parameter prm_from %}
-                    AND     DATE(A.CRAWLSTAMP) <= {% parameter prm_to %}
+                    WHERE   DATE(A.CRAWLSTAMP) >= {% parameter prmfrom %}
+                    AND     DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
                     AND     EXISTS (
                                 SELECT  *
                                 FROM    UNNEST(A.KPE)
-                                WHERE   keyword = {% parameter prm_keyword %}
+                                WHERE   keyword = {% parameter prmkeyword %}
                             )
                 )
-        AND     DATE(TA.CRAWLSTAMP) >= {% parameter prm_from %}
-        AND     DATE(TA.CRAWLSTAMP) <= {% parameter prm_to %}
+        AND     DATE(TA.CRAWLSTAMP) >= {% parameter prmfrom %}
+        AND     DATE(TA.CRAWLSTAMP) <= {% parameter prmto %}
         GROUP BY TB.keyword
         ORDER BY SUM(TB.score) DESC, TB.keyword
         LIMIT   100
        ;;
   }
 
-  filter: prm_keyword {
+  filter: prmkeyword {
     type: string
   }
 
-  filter: prm_from {
+  filter: prmfrom {
     type: string
   }
 
-  filter: prm_to {
+  filter: prmto {
     type: string
   }
 
