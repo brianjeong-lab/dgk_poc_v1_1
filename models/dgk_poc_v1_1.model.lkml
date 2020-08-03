@@ -28,6 +28,8 @@ explore: keyword_list {}
 
 explore: sentence {}
 
+explore: keyword_relation_lv1 {}
+
 explore: sentence_poc {}
 
 explore: big4_bank_hana {}
