@@ -37,3 +37,11 @@ explore: big4_bank_kb {}
 explore: big4_bank_sh {}
 
 explore: big4_bank_wo {}
+
+explore: keyword_bank {}
+
+explore: keyword_bank_result {}
+
+explore: keyword_corona {}
+
+explore: keyword_corona_result {}
