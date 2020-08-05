@@ -43,6 +43,11 @@ view: keyword_relation_lv1 {
     drill_fields: [detail*]
   }
 
+  measure: sum {
+    type: number
+    sql:  SUM(${TABLE}.scr) ;;
+  }
+
   dimension: lv1 {
     type: string
     sql: ${TABLE}.LV1 ;;
