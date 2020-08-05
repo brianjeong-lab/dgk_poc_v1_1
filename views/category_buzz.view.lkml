@@ -7,7 +7,8 @@ view: category_buzz {
         CAT.LABEL,
         A.S_NAME,
         A.SB_NAME,
-        A.CRAWLSTAMP
+        A.CRAWLSTAMP,
+        count(CAT.LABEL)as cnt
       FROM
         `kb-daas-dev.master_200729.keyword_bank_result`A,
         UNNEST(KPE) KWD,
@@ -15,21 +16,12 @@ view: category_buzz {
         `kb-daas-dev.master_200729.keyword_bank`B
       WHERE
         A.DOCID=B.DOCID
-        AND DATE(A.CRAWLSTAMP) >= {% parameter prmfrom %}
-        AND DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
         AND KWD.KEYWORD={% parameter prmkeyword %}
+        GROUP BY 1,2,3,4,5,6,7
        ;;
   }
 
   filter: prmkeyword {
-    type: string
-  }
-
-  filter: prmfrom {
-    type: string
-  }
-
-  filter: prmto {
     type: string
   }
 
@@ -68,9 +60,9 @@ view: category_buzz {
     sql: ${TABLE}.SB_NAME ;;
   }
 
-  dimension_group: crawlstamp {
-    type: time
-    sql: ${TABLE}.CRAWLSTAMP ;;
+  measure: sum_cnt {
+    type: sum
+    sql: COALESCE(${TABLE}.cnt, 0) ;;
   }
 
   set: detail {
@@ -80,8 +72,7 @@ view: category_buzz {
       keyword,
       label,
       s_name,
-      sb_name,
-      crawlstamp_time
+      sb_name
     ]
   }
 }
