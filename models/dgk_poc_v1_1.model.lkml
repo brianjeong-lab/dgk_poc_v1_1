@@ -55,3 +55,5 @@ explore: bank_hana {}
 explore: bank_wo{}
 
 explore: bank_nh{}
+
+explore: test {}
