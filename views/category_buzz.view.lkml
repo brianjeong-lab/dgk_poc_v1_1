@@ -8,6 +8,7 @@ view: category_buzz {
         A.S_NAME,
         A.SB_NAME,
         A.CRAWLSTAMP,
+        A.CHANNEL,
         count(CAT.LABEL)as cnt
       FROM
         `kb-daas-dev.master_200729.keyword_bank_result`A,
@@ -19,7 +20,7 @@ view: category_buzz {
         AND DATE(A.CRAWLSTAMP) >= {% parameter prmfrom %}
         AND DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
         AND KWD.KEYWORD={% parameter prmkeyword %}
-        GROUP BY 1,2,3,4,5,6,7
+        GROUP BY 1,2,3,4,5,6,7,8
        ;;
   }
 
