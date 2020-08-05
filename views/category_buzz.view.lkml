@@ -70,6 +70,11 @@ view: category_buzz {
     sql: ${TABLE}.SB_NAME ;;
   }
 
+  dimension: CHANNEL {
+    type: string
+    sql: ${TABLE}.CHANNEL ;;
+  }
+
   measure: sum_cnt {
     type: sum
     sql: COALESCE(${TABLE}.cnt, 0) ;;
