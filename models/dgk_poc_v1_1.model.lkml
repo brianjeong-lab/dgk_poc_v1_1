@@ -38,6 +38,10 @@ explore: keyword_bank_result {}
 
 explore: keyword_corona {}
 
+explore: big4_bank_wo {}
+
+explore: keword_bank_bypress {}
+
 explore: keyword_corona_result {}
 
 explore: keyword_buzz_channel {}
