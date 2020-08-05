@@ -32,12 +32,30 @@ explore: keyword_relation_lv1 {}
 
 explore: sentence_poc {}
 
-explore: big4_bank_hana {}
+explore: keyword_bank {}
 
-explore: big4_bank_kb {}
+explore: keyword_bank_result {}
 
-explore: big4_bank_sh {}
+explore: keyword_corona {}
 
 explore: big4_bank_wo {}
 
-explore: keword_bank_bypress3 {}
+explore: keword_bank_bypress {}
+
+explore: keyword_corona_result {}
+
+explore: keyword_buzz_channel {}
+
+explore: bank_buzz {}
+
+explore: category_buzz {}
+
+explore: bank_sh {}
+
+explore: bank_kb {}
+
+explore: bank_hana {}
+
+explore: bank_wo{}
+
+explore: bank_nh{}

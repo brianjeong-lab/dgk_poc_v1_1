@@ -1,4 +1,4 @@
-view: keword_bank_bypress3 {
+view: keword_bank_bypress {
   derived_table: {
     sql: WITH keword_bank_bypress2 AS (WITH keyword_bank_bypress AS (SELECT
        S_NAME
@@ -14,8 +14,8 @@ and keywordBankResult.CHANNEL  = '뉴스'
     AND S_NAME != '포모스'
     AND S_NAME != '마이데일리')
 and SB_NAME NOT LIKE '%스포%'
-and DATE(CRAWLSTAMP) >= {% parameter endDate %}
-and DATE(CRAWLSTAMP) <= {% parameter startDate %}
+and DATE(CRAWLSTAMP) <= {% parameter endDate %}
+and DATE(CRAWLSTAMP) >= {% parameter startDate %}
 )
 SELECT RANK() OVER (partition by resultCrawlstampDate
                     ORDER BY pressDateGroupCount DESC) as countRank

@@ -1,26 +1,57 @@
 view: big4_bank_sh {
   derived_table: {
-    sql: SELECT C.KEYWORD
-           , COUNT(C.KEYWORD) AS CNT
-           ,C.WRITE_DAY
-        FROM `kb-daas-dev.mart_200723.keyword_list` C
-       WHERE C.ID IN (
-             SELECT ID
-               FROM `kb-daas-dev.mart_200723.keyword_list` B
-              WHERE B.ID IN (
-                    SELECT ID
-                      FROM `kb-daas-dev.mart_200723.keyword_list`
-                     WHERE {% condition WORD %} KEYWORD {% endcondition %}
-                  )
-                AND B.KEYWORD='신한은행'
-           )
-         AND C.KEYWORD NOT IN ({% parameter WORD %}, '신한은행' )
-       GROUP BY 1,3
-       ORDER BY CNT DESC LIMIT 10
-                 ;;
+    sql: SELECT
+  WORD.KEYWORD,
+  SUM (WORD.score) AS scr,
+  COUNT(WORD.KEYWORD) AS cnt
+FROM
+  `kb-daas-dev.master_200729.keyword_bank_result` TB,
+  UNNEST(KPE) WORD
+WHERE
+  TB.ID IN (
+  SELECT
+    TA.ID
+  FROM
+    `kb-daas-dev.master_200729.keyword_bank_result` TA,
+    UNNEST(KPE) KWD
+  WHERE
+    TA.ID IN (
+    SELECT
+      A.ID
+    FROM
+      `kb-daas-dev.master_200729.keyword_bank_result` A
+    WHERE
+      DATE(A.CRAWLSTAMP) >= {% parameter prmfrom %}
+      AND DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
+      AND EXISTS (
+      SELECT
+        *
+      FROM
+        UNNEST(A.KPE)
+      WHERE
+        keyword = {% parameter prmkeyword %}))
+    AND KWD.KEYWORD IN ('신한은행','SINHANBANK','신한')
+    AND DATE(TA.CRAWLSTAMP) >= {% parameter prmfrom %}
+    AND DATE(TA.CRAWLSTAMP) <= {% parameter prmto %})
+  AND WORD.KEYWORD NOT IN ({% parameter prmkeyword %},
+    '신한은행' )
+GROUP BY
+  1
+ORDER BY
+  SUM(WORD.score) DESC
+LIMIT
+  20
   }
 
-  filter: WORD {
+    filter: prmkeyword {
+    type: string
+  }
+
+  filter: prmfrom {
+    type: string
+  }
+
+  filter: prmto {
     type: string
   }
 
