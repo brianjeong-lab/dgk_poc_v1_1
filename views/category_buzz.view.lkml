@@ -16,8 +16,8 @@ view: category_buzz {
         `kb-daas-dev.master_200729.keyword_bank`B
       WHERE
         A.DOCID=B.DOCID
-        AND DATE(TA.CRAWLSTAMP) >= {% parameter prmfrom %}
-        AND DATE(TA.CRAWLSTAMP) <= {% parameter prmto %})
+        AND DATE(A.CRAWLSTAMP) >= {% parameter prmfrom %}
+        AND DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
         AND KWD.KEYWORD={% parameter prmkeyword %}
         GROUP BY 1,2,3,4,5,6,7
        ;;
