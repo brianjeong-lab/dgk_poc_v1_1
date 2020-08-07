@@ -10,13 +10,13 @@ view: keyword_bank_bypress {
             , COUNT(*)                              AS GRP_CNT
       FROM    `kb-daas-dev.master_200729.keyword_bank_result` as keywordBankResult
           ,   UNNEST(keywordBankResult.KPE)                   as keywordBankResultKpe
-      WHERE   DATE(CRAWLSTAMP) <= {% parameter endDate %}
-      AND     DATE(CRAWLSTAMP) >= {% parameter startDate %}
+      WHERE   DATE(CRAWLSTAMP) <= {% parameter prmto %}
+      AND     DATE(CRAWLSTAMP) >= {% parameter prmfrom %}
       AND     keywordBankResult.CHANNEL     = '뉴스'
       AND     SB_NAME NOT LIKE '%스포%'
       AND     ( S_NAME NOT LIKE '%스포%'
                 AND S_NAME NOT IN ('포모스', '마이데일리' ) )   -- 제외언론
-      AND     keywordBankResultKpe.keyword  = {% parameter searchKeyword %}
+      AND     keywordBankResultKpe.keyword  = {% parameter prmkeyword %}
       GROUP BY GRP_CAT, DATE(CRAWLSTAMP)
 ),
 VW_KB_BANK_RANK AS (
@@ -40,15 +40,15 @@ ORDER BY 2, 3 DESC
 ;;
   }
 
-  filter: searchKeyword {
+  filter: prmkeyword {
     type: string
   }
 
-  filter: startDate {
+  filter: prmfrom {
     type: string
   }
 
-  filter: endDate {
+  filter: prmto {
     type: string
   }
 
