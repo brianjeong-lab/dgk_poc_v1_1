@@ -10,13 +10,13 @@ view: keyword_bank_bypress {
             , COUNT(*)                              AS GRP_CNT
       FROM    `kb-daas-dev.master_200729.keyword_bank_result` as keywordBankResult
           ,   UNNEST(keywordBankResult.KPE)                   as keywordBankResultKpe
-      WHERE   DATE(CRAWLSTAMP) <= '2020-06-30'
-      AND     DATE(CRAWLSTAMP) >= '2020-06-01'
+      WHERE   DATE(CRAWLSTAMP) <= {% parameter endDate %}
+      AND     DATE(CRAWLSTAMP) >= {% parameter startDate %}
       AND     keywordBankResult.CHANNEL     = '뉴스'
       AND     SB_NAME NOT LIKE '%스포%'
       AND     ( S_NAME NOT LIKE '%스포%'
                 AND S_NAME NOT IN ('포모스', '마이데일리' ) )   -- 제외언론
-      AND     keywordBankResultKpe.keyword  = '서비스'
+      AND     keywordBankResultKpe.keyword  = {% parameter searchKeyword %}
       GROUP BY GRP_CAT, DATE(CRAWLSTAMP)
 ),
 VW_KB_BANK_RANK AS (
@@ -26,8 +26,6 @@ VW_KB_BANK_RANK AS (
       FROM    VW_KB_BANK_SUMM  X
       GROUP BY X.GRP_CAT
 )
--- SELECT * FROM VW_KB_BANK_SUMM ORDER BY 1, 2  ## VW_KB_BANK_SUMM 결과 확인 (기존쿼리와 결과 검증 가능)
--- SELECT * FROM VW_KB_BANK_RANK                ## VW_KB_BANK_RANK 결과 확인 (년도간 총 노출건수를 이용한 RANK)
 
 SELECT  CASE
           WHEN A.GRP_CAT IN ( SELECT X.GRP_CAT FROM VW_KB_BANK_RANK X WHERE X.RANK < 15 ) -- 15번째 부터는 '기타'항목으로 통합
@@ -39,8 +37,19 @@ SELECT  CASE
 FROM    VW_KB_BANK_SUMM  A
 GROUP BY 1, 2
 ORDER BY 2, 3 DESC
-;
- ;;
+;;
+  }
+
+  filter: searchKeyword {
+    type: string
+  }
+
+  filter: startDate {
+    type: string
+  }
+
+  filter: endDate {
+    type: string
   }
 
   measure: count {
@@ -48,6 +57,10 @@ ORDER BY 2, 3 DESC
     drill_fields: [detail*]
   }
 
+  measure: mgrp_cnt {
+    type: sum
+    sql: ${TABLE}.GRP_CNT;;
+  }
   dimension: grp_cat {
     type: string
     sql: ${TABLE}.GRP_CAT ;;
