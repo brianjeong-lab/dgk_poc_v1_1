@@ -2,25 +2,16 @@ view: category_buzz {
   derived_table: {
     sql: SELECT
         A.DOCID,
-        B.ID,
-        KWD.keyword,
         CAT.LABEL,
         A.S_NAME,
         A.SB_NAME,
-        A.CRAWLSTAMP,
-        A.CHANNEL,
-        count(CAT.LABEL)as cnt
-      FROM
-        `kb-daas-dev.master_200729.keyword_bank_result`A,
-        UNNEST(KPE) KWD,
-        UNNEST(D2C) CAT,
-        `kb-daas-dev.master_200729.keyword_bank`B
-      WHERE
-        A.DOCID=B.DOCID
-        AND DATE(A.CRAWLSTAMP) >= {% parameter prmfrom %}
-        AND DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
-        AND KWD.KEYWORD={% parameter prmkeyword %}
-        GROUP BY 1,2,3,4,5,6,7,8
+        A.CHANNEL
+FROM
+`kb-daas-dev.master_200729.keyword_bank_result`A,
+UNNEST(D2C) CAT
+WHERE EXISTS (SELECT * FROM UNNEST (A.KPE) WHERE KEYWORD = {% parameter prmkeyword %} )
+AND DATE(A.CRAWLSTAMP) >= {% parameter prmfrom %}
+AND DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
        ;;
   }
 
@@ -83,11 +74,10 @@ view: category_buzz {
   set: detail {
     fields: [
       docid,
-      id,
-      keyword,
       label,
       s_name,
-      sb_name
+      sb_name,
+      CHANNEL
     ]
   }
 }
