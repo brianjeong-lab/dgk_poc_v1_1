@@ -10,6 +10,9 @@ datagroup: dgk_poc_v1_1_default_datagroup {
 
 persist_with: dgk_poc_v1_1_default_datagroup
 
+
+
+
 explore: bank_category_daily {}
 
 explore: category {}
@@ -40,8 +43,6 @@ explore: keyword_corona {}
 
 explore: big4_bank_wo {}
 
-explore: keword_bank_bypress {}
-
 explore: keyword_corona_result {}
 
 explore: keyword_buzz_channel {}
@@ -61,3 +62,5 @@ explore: bank_wo{}
 explore: bank_nh{}
 
 explore: test {}
+
+explore: keyword_bank_bypress {}
