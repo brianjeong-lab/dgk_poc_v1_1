@@ -1,11 +1,12 @@
 view: category_buzz {
   derived_table: {
     sql: SELECT
-        A.DOCID,
+        A.CHANNEL,
         CAT.LABEL,
-        A.S_NAME,
         A.SB_NAME,
-        A.CHANNEL
+        A.S_NAME
+
+
 FROM
 `kb-daas-dev.master_200729.keyword_bank_result`A,
 UNNEST(D2C) CAT
@@ -73,11 +74,11 @@ AND DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
 
   set: detail {
     fields: [
-      docid,
+      CHANNEL,
       label,
-      s_name,
       sb_name,
-      CHANNEL
+      s_name
+
     ]
   }
 }
