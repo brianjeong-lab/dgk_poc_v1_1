@@ -1,26 +1,35 @@
 view: big4_bank_kb {
   derived_table: {
-    sql: SELECT C.KEYWORD
-           , COUNT(C.KEYWORD) AS CNT
-           ,C.WRITE_DAY
-        FROM `kb-daas-dev.mart_200723.keyword_list` C
-       WHERE C.ID IN (
-             SELECT ID
-               FROM `kb-daas-dev.mart_200723.keyword_list` B
-              WHERE B.ID IN (
-                    SELECT ID
-                      FROM `kb-daas-dev.mart_200723.keyword_list`
-                     WHERE {% condition WORD %} KEYWORD {% endcondition %}
-                  )
-                AND B.KEYWORD='국민은행'
-           )
-         AND C.KEYWORD NOT IN ({% parameter WORD %}, '국민은행' )
-       GROUP BY 1,3
-       ORDER BY CNT DESC LIMIT 10
+    sql: SELECT  TK.KEYWORD,
+        SUM (TK.score) AS SCR,
+        COUNT(TK.KEYWORD) AS CNT
+FROM `kb-daas-dev.master_200729.keyword_bank_result` B ,  UNNEST (KPE) TK WHERE
+DATE (B.CRAWLSTAMP ) >= {% parameter prmfrom %}
+AND DATE (B.CRAWLSTAMP ) <= {% parameter prmto %}
+AND B.DOCID IN (
+  SELECT A.DOCID
+    FROM `kb-daas-dev.master_200729.keyword_bank_result` A
+    WHERE DATE (A.CRAWLSTAMP ) >= {% parameter prmfrom %}
+      AND DATE (A.CRAWLSTAMP ) <= {% parameter prmto %}
+      AND EXISTS (SELECT * FROM UNNEST (A.KPE ) WHERE KEYWORD = {% parameter prmkeyword %} )
+      AND EXISTS (SELECT * FROM UNNEST (A.KPE ) WHERE KEYWORD IN ('국민은행','KBBANK','KB국민은행','KB은행') )
+     )
+AND TK.KEYWORD NOT IN ({% parameter prmkeyword %},'국민은행','KBBANK','KB국민은행','KB은행')
+GROUP BY TK.KEYWORD
+ORDER BY SCR DESC
+LIMIT 10
                  ;;
   }
 
-  filter: WORD {
+   filter: prmkeyword {
+    type: string
+  }
+
+  filter: prmfrom {
+    type: string
+  }
+
+  filter: prmto {
     type: string
   }
 
@@ -39,22 +48,36 @@ view: big4_bank_kb {
     sql: ${TABLE}.KEYWORD ;;
   }
 
-  dimension: write_day {
-    type: number
-    sql: ${TABLE}.WRITE_DAY ;;
+  dimension: channel {
+    type: string
+    sql: ${TABLE}.channel ;;
   }
 
-  dimension: mydate {
-    type: date
-    sql: TIMESTAMP(PARSE_DATE('%Y%m%d', FORMAT('%08d',${TABLE}.WRITE_DAY)));;
+  dimension: s_name {
+    type: string
+    sql: ${TABLE}.s_name ;;
+  }
+
+  dimension: sb_name {
+    type: string
+    sql: ${TABLE}.sb_name ;;
+  }
+
+
+  dimension: scr {
+    type: number
+    sql: ${TABLE}.scr ;;
   }
 
   dimension: cnt {
     type: number
-    sql: ${TABLE}.cnt ;;
+    sql: ${TABLE}.CNT ;;
   }
 
   set: detail {
-    fields: [keyword, cnt]
+    fields: [
+      channel,
+      sb_name,
+      s_name]
   }
 }
