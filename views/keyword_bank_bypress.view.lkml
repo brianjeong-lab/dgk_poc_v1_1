@@ -1,3 +1,5 @@
+include: "/views/keyword_bank_result.view"
+
 view: keyword_bank_bypress {
   derived_table: {
     sql: WITH VW_KB_BANK_SUMM AS (
@@ -28,7 +30,7 @@ VW_KB_BANK_RANK AS (
 )
 
 SELECT  CASE
-          WHEN A.GRP_CAT IN ( SELECT X.GRP_CAT FROM VW_KB_BANK_RANK X WHERE X.RANK < 15 ) -- 15번째 부터는 '기타'항목으로 통합
+          WHEN A.GRP_CAT IN ( SELECT X.GRP_CAT FROM VW_KB_BANK_RANK X WHERE X.RANK < 16 ) -- 15번째 부터는 '기타'항목으로 통합
           THEN A.GRP_CAT
           ELSE '기타'
         END       AS GRP_CAT
@@ -60,6 +62,7 @@ ORDER BY 2, 3 DESC
   measure: mgrp_cnt {
     type: sum
     sql: ${TABLE}.GRP_CNT;;
+    drill_fields: [detail*]
   }
   dimension: grp_cat {
     type: string
