@@ -61,6 +61,4 @@ explore: bank_wo{}
 
 explore: bank_nh{}
 
-explore: test {}
-
 explore: keyword_bank_bypress {}

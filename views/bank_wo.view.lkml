@@ -1,48 +1,23 @@
 view: bank_wo {
   derived_table: {
-    sql: SELECT
-        WORD.KEYWORD,
-        SUM (WORD.score) AS scr,
-        COUNT(WORD.KEYWORD) AS CNT
-      FROM
-        `kb-daas-dev.master_200729.keyword_bank_result` TB,
-        UNNEST(KPE) WORD
-      WHERE
-        TB.DOCID IN (
-        SELECT
-          TA.DOCID
-        FROM
-          `kb-daas-dev.master_200729.keyword_bank_result` TA,
-          UNNEST(KPE) KWD
-        WHERE
-          TA.DOCID IN (
-          SELECT
-            A.DOCID
-          FROM
-            `kb-daas-dev.master_200729.keyword_bank_result` A
-          WHERE
-            DATE(A.CRAWLSTAMP) >= {% parameter prmfrom %}
-            AND DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
-            AND EXISTS (
-            SELECT
-              *
-            FROM
-              UNNEST(A.KPE)
-            WHERE
-              keyword = {% parameter prmkeyword %}))
-          AND KWD.KEYWORD IN ('우리은행','WOORIBANK')
-          AND DATE(TA.CRAWLSTAMP) >= {% parameter prmfrom %}
-          AND DATE(TA.CRAWLSTAMP) <= {% parameter prmto %})
-        AND WORD.KEYWORD NOT IN ({% parameter prmkeyword %},
-          '우리은행','WOORIBANK' )
-        AND DATE(TB.CRAWLSTAMP) >= {% parameter prmfrom %}
-        AND DATE(TB.CRAWLSTAMP) <= {% parameter prmto %}
-      GROUP BY
-        1
-      ORDER BY
-        SUM(WORD.score) DESC
-      LIMIT
-        10
+    sql:  SELECT  TK.KEYWORD,
+        SUM (TK.score) AS SCR,
+        COUNT(TK.KEYWORD) AS CNT
+FROM `kb-daas-dev.master_200729.keyword_bank_result` B ,  UNNEST (KPE) TK WHERE
+DATE (B.CRAWLSTAMP ) >= {% parameter prmfrom %}
+AND DATE (B.CRAWLSTAMP ) <= {% parameter prmto %}
+AND B.DOCID IN (
+  SELECT A.DOCID
+    FROM `kb-daas-dev.master_200729.keyword_bank_result` A
+    WHERE DATE (A.CRAWLSTAMP ) >= {% parameter prmfrom %}
+      AND DATE (A.CRAWLSTAMP ) <= {% parameter prmto %}
+      AND EXISTS (SELECT * FROM UNNEST (A.KPE ) WHERE KEYWORD = {% parameter prmkeyword %} )
+      AND EXISTS (SELECT * FROM UNNEST (A.KPE ) WHERE KEYWORD IN ('우리은행','WOORIBANK') )
+     )
+AND TK.KEYWORD NOT IN ({% parameter prmkeyword %},'우리은행','WOORIBANK')
+GROUP BY TK.KEYWORD
+ORDER BY SCR DESC
+LIMIT 10
        ;;
   }
 

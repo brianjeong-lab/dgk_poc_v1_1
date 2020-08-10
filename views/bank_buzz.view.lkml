@@ -1,11 +1,11 @@
 view: bank_buzz {
   derived_table: {
     sql: SELECT
-        TB.DOCID,
-        WORD.keyword,
-        TTA.BANK_CATEGORY,
+        TB.CHANNEL,
+        CAT.label AS LABEL,
+        TB.SB_NAME,
         TB.S_NAME,
-        TB.SB_NAME
+        TTA.BANK_CATEGORY
       FROM (
         SELECT
           TA.DOCID AS CA_ID,
@@ -48,11 +48,11 @@ view: bank_buzz {
         AND DATE(TB.CRAWLSTAMP) <= {% parameter prmto %}
         AND WORD.keyword={% parameter prmkeyword %}
       GROUP BY
-        TB.DOCID,
-        WORD.keyword,
-        TTA.BANK_CATEGORY,
+        TB.CHANNEL,
+        LABEL,
+        TB.SB_NAME,
         TB.S_NAME,
-        TB.SB_NAME
+        TTA.BANK_CATEGORY
        ;;
   }
 
@@ -83,6 +83,16 @@ view: bank_buzz {
     sql: ${TABLE}.keyword ;;
   }
 
+  dimension: channel {
+    type: string
+    sql: ${TABLE}.channel ;;
+  }
+
+  dimension: label {
+    type: string
+    sql: ${TABLE}.label ;;
+  }
+
   dimension: bank_category {
     type: string
     sql: ${TABLE}.BANK_CATEGORY ;;
@@ -99,6 +109,12 @@ view: bank_buzz {
   }
 
   set: detail {
-    fields: [docid, keyword, bank_category, s_name, sb_name]
+    fields: [
+      channel,
+      label,
+      sb_name,
+      s_name,
+      bank_category
+    ]
   }
 }
