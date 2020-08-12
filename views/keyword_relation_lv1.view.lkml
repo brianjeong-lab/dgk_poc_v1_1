@@ -6,10 +6,10 @@ view: keyword_relation_lv1 {
             ,   SUM(TB.score)     AS scr
             ,   COUNT(TB.keyword) AS cnt
             ,   TB.keyword || ' (' || ROUND(SUM(TB.score)) || ')' AS label
-        FROM    `kb-daas-dev.master_200723.keyword_bank_result` TA, UNNEST(TA.KPE) AS TB
-        WHERE   TA.ID IN (
-                    SELECT  A.ID
-                    FROM    `kb-daas-dev.master_200723.keyword_bank_result` A
+        FROM    `kb-daas-dev.master_200729.keyword_bank_result` TA, UNNEST(TA.KPE) AS TB
+        WHERE   TA.DOCID IN (
+                    SELECT  A.DOCID
+                    FROM    `kb-daas-dev.master_200729.keyword_bank_result` A
                     WHERE   DATE(A.CRAWLSTAMP) >= {% parameter prmfrom %}
                     AND     DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
                     AND     EXISTS (

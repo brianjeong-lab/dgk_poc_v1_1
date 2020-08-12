@@ -62,3 +62,5 @@ explore: bank_wo{}
 explore: bank_nh{}
 
 explore: keyword_bank_bypress {}
+
+explore: bodo {}
