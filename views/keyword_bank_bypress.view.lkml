@@ -30,7 +30,7 @@ VW_KB_BANK_RANK AS (
 )
 
 SELECT  CASE
-          WHEN A.GRP_CAT IN ( SELECT X.GRP_CAT FROM VW_KB_BANK_RANK X WHERE X.RANK < 16 ) -- 15번째 부터는 '기타'항목으로 통합
+          WHEN A.GRP_CAT IN ( SELECT X.GRP_CAT FROM VW_KB_BANK_RANK X WHERE X.RANK < 15 ) -- 15번째 부터는 '기타'항목으로 통합
           THEN A.GRP_CAT
           ELSE '기타'
         END       AS GRP_CAT
