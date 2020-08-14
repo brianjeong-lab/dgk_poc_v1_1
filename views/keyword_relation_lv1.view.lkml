@@ -20,6 +20,7 @@ view: keyword_relation_lv1 {
                 )
         AND     DATE(TA.CRAWLSTAMP) >= {% parameter prmfrom %}
         AND     DATE(TA.CRAWLSTAMP) <= {% parameter prmto %}
+        AND     TB.keywod != {% parameter prmkeyword %}
         GROUP BY TB.keyword
         ORDER BY SUM(TB.score) DESC, TB.keyword
         LIMIT   100
