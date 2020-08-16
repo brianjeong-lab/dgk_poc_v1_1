@@ -40,8 +40,8 @@ view: keyword_relation_lv2 {
                     FROM
                       `kb-daas-dev.master_200729.keyword_bank_result` A
                     WHERE
-                      DATE(A.CRAWLSTAMP) >= "2020-05-25"
-                      AND DATE(A.CRAWLSTAMP) <= "2020-07-01"
+                      A.CRAWLSTAMP BETWEEN TIMESTAMP_SUB(TIMESTAMP {% parameter prmfrom %}, INTERVAL 1 DAY)
+                          AND TIMESTAMP_ADD(TIMESTAMP {% parameter prmto %}, INTERVAL 2 DAY)
                       AND DATE(A.WRITESTAMP) >= {% parameter prmfrom %}
                       AND DATE(A.WRITESTAMP) <= {% parameter prmto %}
                       AND EXISTS (
@@ -51,8 +51,8 @@ view: keyword_relation_lv2 {
                         UNNEST(A.KPE)
                       WHERE
                         keyword = {% parameter prmkeyword %} ) )
-                    AND DATE(TA.CRAWLSTAMP) >= "2020-05-25"
-                    AND DATE(TA.CRAWLSTAMP) <= "2020-07-01"
+                    AND TA.CRAWLSTAMP BETWEEN TIMESTAMP_SUB(TIMESTAMP {% parameter prmfrom %}, INTERVAL 1 DAY)
+                          AND TIMESTAMP_ADD(TIMESTAMP {% parameter prmto %}, INTERVAL 2 DAY)
                     AND DATE(TA.WRITESTAMP) >= {% parameter prmfrom %}
                     AND DATE(TA.WRITESTAMP) <= {% parameter prmto %}
                     AND TB.keyword != {% parameter prmkeyword %}
@@ -67,8 +67,8 @@ view: keyword_relation_lv2 {
                 WHERE
                   AAB.keyword = BBB.LV1_keyword
                   AND LENGTH(AAB.keyword) < 10
-                  AND DATE(AAA.CRAWLSTAMP) >= "2020-05-25"
-                  AND DATE(AAA.CRAWLSTAMP) <= "2020-07-01"
+                  AND AAA.CRAWLSTAMP BETWEEN TIMESTAMP_SUB(TIMESTAMP {% parameter prmfrom %}, INTERVAL 1 DAY)
+                          AND TIMESTAMP_ADD(TIMESTAMP {% parameter prmto %}, INTERVAL 2 DAY)
                   AND DATE(AAA.WRITESTAMP) >= {% parameter prmfrom %}
                   AND DATE(AAA.WRITESTAMP) <= {% parameter prmto %}
                 GROUP BY
@@ -80,9 +80,10 @@ view: keyword_relation_lv2 {
             WHERE
               AAAA.docid = BBBB.docid
               AND AAAB.keyword != BBBB.LV1_keyword
+              AND AAAB.keyword != {% parameter prmkeyword %}
               AND LENGTH(AAAB.keyword) < 10
-              AND DATE(AAAA.CRAWLSTAMP) >= "2020-05-25"
-              AND DATE(AAAA.CRAWLSTAMP) <= "2020-07-01"
+              AND AAAA.CRAWLSTAMP BETWEEN TIMESTAMP_SUB(TIMESTAMP {% parameter prmfrom %}, INTERVAL 1 DAY)
+                          AND TIMESTAMP_ADD(TIMESTAMP {% parameter prmto %}, INTERVAL 2 DAY)
               AND DATE(AAAA.WRITESTAMP) >= {% parameter prmfrom %}
               AND DATE(AAAA.WRITESTAMP) <= {% parameter prmto %}
             GROUP BY
