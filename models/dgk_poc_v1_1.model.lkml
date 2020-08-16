@@ -33,6 +33,8 @@ explore: sentence {}
 
 explore: keyword_relation_lv1 {}
 
+explore: keyword_relation_lv2 {}
+
 explore: sentence_poc {}
 
 explore: keyword_bank {}
