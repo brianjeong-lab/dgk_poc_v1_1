@@ -4,7 +4,7 @@ view: keyword_relation_lv2_hist2 {
           SELECT
             DATE(AAA.WRITESTAMP) as day
             , AAB.keyword as keyword
-            , AAB.score
+            , AAB.score * 10 as score
           FROM
             `kb-daas-dev.master_200729.keyword_bank_result` AAA,
             UNNEST(AAA.KPE) AS AAB,
@@ -73,11 +73,14 @@ view: keyword_relation_lv2_hist2 {
   dimension: keyword {
     type: string
     sql: ${TABLE}.keyword ;;
+    drill_fields: [detail*]
+
   }
 
   measure: score {
     type: number
     sql: sum(ceil(${TABLE}.score)) ;;
+    drill_fields: [detail*]
   }
 
   set: detail {
