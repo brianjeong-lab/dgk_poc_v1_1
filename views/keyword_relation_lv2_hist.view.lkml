@@ -32,12 +32,14 @@ view: keyword_relation_lv2_hist {
                     AND DATE(A.WRITESTAMP) >= {% parameter prmfrom %}
                     AND DATE(A.WRITESTAMP) <= {% parameter prmto %}
                     AND K.keyword = {% parameter prmkeyword %}
+                    AND A.DOCID not in (SELECT docid from `kb-daas-dev.mart_200729.keyword_bank_result_agg_remove_docid`)
                 )
                 AND TA.CRAWLSTAMP BETWEEN TIMESTAMP_SUB(TIMESTAMP {% parameter prmfrom %}, INTERVAL 1 DAY)
                     AND TIMESTAMP_ADD(TIMESTAMP {% parameter prmto %}, INTERVAL 2 DAY)
                 AND DATE(TA.WRITESTAMP) >= {% parameter prmfrom %}
                 AND DATE(TA.WRITESTAMP) <= {% parameter prmto %}
                 AND TB.keyword != {% parameter prmkeyword %}
+                AND TB.keyword not in (SELECT keyword from `kb-daas-dev.mart_200729.filter`)
                 AND LENGTH(TB.keyword) < 10
               GROUP BY
                 keyword
@@ -58,12 +60,14 @@ view: keyword_relation_lv2_hist {
               AND DATE(A.WRITESTAMP) >= {% parameter prmfrom %}
               AND DATE(A.WRITESTAMP) <= {% parameter prmto %}
               AND K.keyword = {% parameter prmkeyword %}
+              AND A.DOCID not in (SELECT docid from `kb-daas-dev.mart_200729.keyword_bank_result_agg_remove_docid`)
           )
           AND TA.CRAWLSTAMP BETWEEN TIMESTAMP_SUB(TIMESTAMP {% parameter prmfrom %}, INTERVAL 1 DAY)
               AND TIMESTAMP_ADD(TIMESTAMP {% parameter prmto %}, INTERVAL 2 DAY)
           AND DATE(TA.WRITESTAMP) >= {% parameter prmfrom %}
           AND DATE(TA.WRITESTAMP) <= {% parameter prmto %}
           AND TB.keyword != {% parameter prmkeyword %}
+          AND TB.keyword not in (SELECT keyword from `kb-daas-dev.mart_200729.filter`)
           AND LENGTH(TB.keyword) < 10
           AND TB.keyword = TC.keyword
        ;;

@@ -4,7 +4,8 @@ view: keyword_relation_lv2_hist2 {
           SELECT
             DATE(AAA.WRITESTAMP) as day
             , AAB.keyword as keyword
-            , AAB.score * 10 as score
+            , AAB.score  as score
+            , 1 as cnt
           FROM
             `kb-daas-dev.master_200729.keyword_bank_result` AAA,
             UNNEST(AAA.KPE) AS AAB,
@@ -29,12 +30,14 @@ view: keyword_relation_lv2_hist2 {
                     AND DATE(A.WRITESTAMP) >= {% parameter prmfrom %}
                     AND DATE(A.WRITESTAMP) <= {% parameter prmto %}
                     AND K.keyword = {% parameter prmkeyword %}
+                    AND A.DOCID not in (SELECT docid from `kb-daas-dev.mart_200729.keyword_bank_result_agg_remove_docid`)
                 )
                 AND TA.CRAWLSTAMP BETWEEN TIMESTAMP_SUB(TIMESTAMP {% parameter prmfrom %}, INTERVAL 1 DAY)
                     AND TIMESTAMP_ADD(TIMESTAMP {% parameter prmto %}, INTERVAL 2 DAY)
                 AND DATE(TA.WRITESTAMP) >= {% parameter prmfrom %}
                 AND DATE(TA.WRITESTAMP) <= {% parameter prmto %}
                 AND TB.keyword != {% parameter prmkeyword %}
+                AND TB.keyword not in (SELECT keyword from `kb-daas-dev.mart_200729.filter`)
                 AND LENGTH(TB.keyword) < 10
               GROUP BY
                 TB.keyword
@@ -83,7 +86,13 @@ view: keyword_relation_lv2_hist2 {
     drill_fields: [detail*]
   }
 
+  measure: cnt {
+    type: number
+    sql: sum(${TABLE}.cnt) ;;
+    drill_fields: [detail*]
+  }
+
   set: detail {
-    fields: [day, keyword, score]
+    fields: [day, keyword, score, cnt]
   }
 }

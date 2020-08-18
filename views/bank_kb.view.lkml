@@ -14,10 +14,11 @@ AND B.DOCID IN (
       AND EXISTS (SELECT * FROM UNNEST (A.KPE ) WHERE KEYWORD = {% parameter prmkeyword %} )
       AND EXISTS (SELECT * FROM UNNEST (A.KPE ) WHERE KEYWORD IN ('국민은행','KBBANK','KB국민은행','KB은행') )
      )
-AND TK.KEYWORD NOT IN ({% parameter prmkeyword %},'국민은행','KBBANK','KB국민은행','KB은행')
+AND TK.KEYWORD NOT IN ({% parameter prmkeyword %},'국민은행','KBBANK','KB국민은행','KB은행','하나은행','HANABANK')
+AND TK.KEYWORD NOT in (SELECT keyword from `kb-daas-dev.mart_200729.filter`)
 GROUP BY TK.KEYWORD
 ORDER BY SCR DESC
-LIMIT 10
+LIMIT 15
        ;;
   }
 
