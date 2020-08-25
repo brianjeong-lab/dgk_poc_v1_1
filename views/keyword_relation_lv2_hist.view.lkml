@@ -93,6 +93,7 @@ view: keyword_relation_lv2_hist {
   dimension: keyword {
     type: string
     sql: ${TABLE}.keyword ;;
+    drill_fields: [detail*]
   }
 
   dimension: score {
@@ -113,6 +114,7 @@ view: keyword_relation_lv2_hist {
   measure: sum_cnt {
     type:  number
     sql:  sum(${TABLE}.cnt) ;;
+    drill_fields: [detail*]
   }
 
   set: detail {

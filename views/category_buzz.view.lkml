@@ -77,8 +77,8 @@ AND DATE(A.CRAWLSTAMP) <= {% parameter prmto %}
       CHANNEL,
       label,
       sb_name,
-      s_name
-
+      s_name,
+      count
     ]
   }
 }

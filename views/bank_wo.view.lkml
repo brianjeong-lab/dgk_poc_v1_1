@@ -13,6 +13,8 @@ AND B.DOCID IN (
       AND DATE (A.CRAWLSTAMP ) <= {% parameter prmto %}
       AND EXISTS (SELECT * FROM UNNEST (A.KPE ) WHERE KEYWORD = {% parameter prmkeyword %} )
       AND EXISTS (SELECT * FROM UNNEST (A.KPE ) WHERE KEYWORD IN ('우리은행','WOORIBANK') )
+      AND A.D2C[SAFE_OFFSET(0)].label != '야구'
+      AND A.docid not in (SELECT docid from `kb-daas-dev.mart_200729.keyword_bank_result_agg_remove_docid`)
      )
 AND TK.KEYWORD NOT IN ({% parameter prmkeyword %},'우리은행','WOORIBANK','신한은행','SINHANBANK','신한','농협은행','NHBANK','NH농협','NH은행','농협','국민은행','KBBANK','KB국민은행','KB은행','하나은행','HANABANK')
 AND TK.KEYWORD NOT in (SELECT keyword from `kb-daas-dev.mart_200729.filter`)
