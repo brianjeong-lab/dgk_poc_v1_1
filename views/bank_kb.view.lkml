@@ -1,6 +1,6 @@
 view: bank_kb {
   derived_table: {
-    sql: SELECT  TK.KEYWORD,
+    sql: SELECT  (CASE WHEN TK.keyword = "KBALBERT" THEN "KB알버트" ELSE TK.keyword END) as keyword,
         SUM (TK.score) AS SCR,
         COUNT(TK.KEYWORD) AS CNT
 FROM `kb-daas-dev.master_200729.keyword_bank_result` B ,  UNNEST (KPE) TK WHERE
@@ -18,7 +18,7 @@ AND B.DOCID IN (
      )
 AND TK.KEYWORD NOT IN ({% parameter prmkeyword %},'국민은행','KBBANK','KB국민은행','KB은행','하나은행','HANABANK')
 AND TK.KEYWORD NOT in (SELECT keyword from `kb-daas-dev.mart_200729.filter`)
-GROUP BY TK.KEYWORD
+GROUP BY KEYWORD
 ORDER BY SCR DESC
 LIMIT 15
        ;;
