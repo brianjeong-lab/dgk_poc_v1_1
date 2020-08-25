@@ -10,7 +10,7 @@ view: keyword_relation_lv2 {
               BBBB.LV1_keyword,
               BBBB.LV1_scr,
               BBBB.LV1_cnt,
-              (CASE WHEN AAAB.keyword = "KBALERT" THEN "KB알버트" ELSE AAAB.keyword END) as LV2_keyword,
+              (CASE WHEN AAAB.keyword = "KBALBERT" OR AAAB.keyword = "ALBERT" THEN "KB알버트" ELSE AAAB.keyword END) as LV2_keyword,
               SUM(AAAB.score) AS LV2_scr,
               COUNT(AAAB.keyword) AS LV2_cnt,
               ROW_NUMBER() OVER (PARTITION BY BBBB.LV1_keyword ORDER BY SUM(AAAB.score) DESC) AS rownum
